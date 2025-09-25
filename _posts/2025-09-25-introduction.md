@@ -11,9 +11,9 @@ image: assets/img/2025-09-25-introduction/nekopara_avatar.png
 Welcome to my personal blog 🎉  
 This is the place where I’ll be sharing:
 
-- CTF writeups focused on Web challenges 🕵️
-- Practical security research & learning notes 🔐
-- Programming tips, experiments and small tools 💻
+- CTF writeups focused on Web challenges
+- Practical security research & learning notes
+- Programming tips, experiments and small tools
 
 ---
 
@@ -26,11 +26,4 @@ I started this blog to:
 
 ---
 
-## 🚀 What’s next?
-
-Expect upcoming posts on:
-- Web exploit writeups (XSS, SSRF, Sqli, auth bypass)
-- Sandbox bypass tips (Node.js / browser environments)
-- Small tooling and automation for recon and exploitation
-
-If you want a particular writeup or topic, drop a note — I’ll prioritize popular requests. 😺
+Improve a little each day. 😺
