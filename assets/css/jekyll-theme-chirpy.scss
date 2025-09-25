@@ -8,62 +8,127 @@ pre {
   tab-size: 2;
 }
 
-#sidebar .site-title {
-  color: #bbbbbb;
+/* Background image low-opacity unified implementation */
+:root {
+  /* Adjust these to control perceived image strength */
+  --bg-image-url: url('/assets/img/misc/plana.png');
+  --bg-image-opacity-light: 0.08; /* target ~8% */
+  --bg-image-opacity-dark: 0.10;  /* target ~10% */
 }
 
-#sidebar .site-title:hover {
-  color: #eeeeee;
+body {
+  /* Keep solid base color from theme variables */
+  background: var(--main-bg); /* base color */
+  position: relative;
+  overflow-x: hidden;
 }
 
+/* Single pseudo-element layer = image + opacity control */
+body::after {
+  content: '';
+  position: fixed; /* covers full viewport regardless of scroll */
+  inset: 0;
+  pointer-events: none;
+  z-index: -1; /* stay behind all layout */
+  background-image: var(--bg-image-url);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: var(--bg-image-opacity-light); /* default for light (overridden in dark) */
+  transition: opacity .4s ease-in-out, filter .4s ease-in-out; /* smooth theme swap */
+  /* Slight blur softens pattern so it doesn’t fight text */
+  filter: saturate(.9) contrast(.9);
+}
+
+/******** Theme specific tuning ********/
+html[data-mode='dark'] body::after {
+  opacity: var(--bg-image-opacity-dark);
+  filter: saturate(.8) contrast(.8) brightness(.7);
+}
+
+/* If system prefers dark but no explicit data-mode attr yet */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) body::after {
+    opacity: var(--bg-image-opacity-dark);
+    filter: saturate(.8) contrast(.8) brightness(.7);
+  }
+}
+
+/* Remove previous overlay approach (before pseudo-element) */
+html[data-mode='dark'] body::before,
+html[data-mode='light'] body::before { display: none !important; }
+
+/* Sidebar styling for both light and dark themes with transitions */
 #sidebar {
   .site-title {
     a {
       @extend %clickable-transition;
       @extend %sidebar-link-hover;
-      color: #bbbbbb;
       text-decoration: none;
+      transition: color 0.3s ease-in-out;
     }
   }
+
   ul {
     a {
-      color: #ddd;
-      background-color: #4a4a4a30;
-      // background-color: #a4a4a430;
+      transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
     }
   }
 }
 
-#sidebar:after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  // background-image: url('');
-  // background-size: cover;
-  width: 100%;
-  height: 100%;
-  opacity: 0.4;
-  z-index: -1;
+/* Dark theme styles */
+[data-mode="dark"] {
+  #sidebar .site-title {
+    color: #bbbbbb;
+  }
+
+  #sidebar .site-title:hover {
+    color: #eeeeee;
+  }
+
+  #sidebar {
+    .site-title {
+      a {
+        color: #bbbbbb;
+      }
+    }
+    ul {
+      a {
+        color: #ddd;
+        background-color: #4a4a4a30;
+      }
+    }
+  }
 }
 
-#main-wrapper:after {
-  content: "";
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: url("/assets/img/misc/plana.png");
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.08;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+/* Light theme styles */
+[data-mode="light"] {
+  #sidebar .site-title {
+    color: #555;
+  }
+
+  #sidebar .site-title:hover {
+    color: #333;
+  }
+
+  #sidebar {
+    .site-title {
+      a {
+        color: #555;
+      }
+    }
+    ul {
+      a {
+        color: #666;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
 }
+
+/* Removed sidebar background - focusing on main content background only */
+
+/* Removed old conflicting background styles - using body::before approach instead */
 
 #topbar-wrapper {
   border-radius: 0 0 .625rem .625rem;
@@ -72,4 +137,55 @@ pre {
 #tail-wrapper>footer {
   padding: 0 1.75rem;
   border-radius: .625rem .625rem 0 0;
+}
+
+/* Add smooth transitions for theme elements */
+#main-wrapper,
+.post-content,
+#post-wrapper .post-content,
+h1, h2, h3, h4, h5, h6,
+code,
+blockquote,
+a {
+  transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+/* Ensure proper text contrast in light theme */
+[data-mode="light"] {
+  /* Main content area */
+  #main-wrapper {
+    color: #333;
+  }
+
+  /* Post content */
+  .post-content,
+  #post-wrapper .post-content {
+    color: #444;
+  }
+
+  /* Headings in light theme */
+  h1, h2, h3, h4, h5, h6 {
+    color: #222 !important;
+  }
+
+  /* Code blocks and inline code */
+  code {
+    background-color: #f5f5f5 !important;
+    color: #333 !important;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    border-left-color: #ddd !important;
+    color: #666 !important;
+  }
+
+  /* Links */
+  a {
+    color: #0d6efd !important;
+  }
+
+  a:hover {
+    color: #0a58ca !important;
+  }
 }
